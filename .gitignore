@@ -1,6 +1,6 @@
-Tests
-buildTests
+test
+buildTest
 build
 .vscode
 
-buildTests.bat
+buildTest.bat

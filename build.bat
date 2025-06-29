@@ -25,7 +25,7 @@ for %%f in (%SOURCES%) do (
   gcc -Iinclude -Wall -Wextra -std=c11 %%f -c -o build\%%~nf.o
 )
 
-gcc build\*.o -o build\orionConsole.exe
+gcc build\*.o -o build\orionConsole.exe -lole32 -lshell32 -luuid
 
 if not exist build\orionConsole.exe (
   echo Program compilation failed
