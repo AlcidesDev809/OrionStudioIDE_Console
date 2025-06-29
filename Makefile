@@ -16,4 +16,4 @@ build/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	-del /Q build\*.o build\*.exe
+	del /Q build\*

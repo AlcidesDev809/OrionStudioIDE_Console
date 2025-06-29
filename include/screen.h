@@ -3,4 +3,6 @@
 
 void drawMainScreen();
 
+void openEditorScreen();
+
 #endif // SCREEN_H

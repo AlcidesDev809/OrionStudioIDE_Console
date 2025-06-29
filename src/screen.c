@@ -3,17 +3,17 @@
 
 #include "screen.h"
 #include "cursor.h"
+#include "color.h"
+#include "wait.h"
 #include "output.h"
 
 void drawMainScreen()
 {
-
     const char *const options[] = {
         "[Esq] - Exit the program",
         "[^W] - Open Website",
         "[^G] - Open GitHub",
-        "[^D] - Open Orion IDE",
-        "[^H] - Help"};
+        "[^D] - Open Orion IDE"};
 
     const char *lines[] = {
         "╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗",
@@ -42,8 +42,9 @@ void drawMainScreen()
         "║                                                                                         │                            ║",
         "║                                                                                         │                            ║",
         "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
         "╟─────────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────╢",
-        "║  Waiting for character code input                                                       │ CC0 Creative Commons Zero  ║",
+        "║  Waiting for character code input                                                       │    MIT License (c) 2025    ║",
         "╚═════════════════════════════════════════════════════════════════════════════════════════╧════════════════════════════╝"};
 
     for (size_t i = 0; i < sizeof(lines) / sizeof(lines[0]); ++i)
@@ -53,5 +54,61 @@ void drawMainScreen()
     {
         setCursor(false, 94, 12 + i * 2);
         printc(";%s", 0xDDECFC, options[i]);
+    }
+}
+
+void openEditorScreen()
+{
+    const char *const options[] = {
+        "[Esq] - Exit the program"};
+
+    bool program = true;
+
+    const char *lines[] = {
+        "╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗",
+        "║                                                                                                                      ║",
+        "╠═════════════════════════════════════════════════════════════════════════════════════════╤════════════════════════════╣",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "║                                                                                         │                            ║",
+        "╟─────────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────╢",
+        "║  Waiting for character code input                                                       │    MIT License (c) 2025    ║",
+        "╚═════════════════════════════════════════════════════════════════════════════════════════╧════════════════════════════╝"};
+
+    for (size_t i = 0; i < sizeof(lines) / sizeof(lines[0]); ++i)
+        printc(";%s", 0xFFFFFF, lines[i]);
+
+    for (size_t i = 0; i < sizeof(options) / sizeof(options[0]); i++)
+    {
+        setCursor(false, 94, 12 + i * 2);
+        printc(";%s", 0xDDECFC, options[i]);
+    }
+
+    while (program)
+    {
+        setCursor(false, 5, 20);
+        pause("Press any key to exit the program ...", White);
+        program = false;
     }
 }
