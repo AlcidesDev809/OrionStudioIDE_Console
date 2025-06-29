@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+
 #include "strformat.h"
 
 int isEmpty(const char *string)

@@ -31,7 +31,7 @@ int printc(const char *format, ...)
         if (length < 0)
             goto cleanup;
 
-        length++; // para o '\0'
+        length++;
         buffer = malloc(length);
         if (!buffer)
             goto cleanup;
@@ -74,9 +74,5 @@ cleanup:
 void setEncoding(EncodingCode encodingCode)
 {
     if (encodingCode == UTF8)
-    {
-#ifdef _WIN32
         system("chcp 65001 > nul");
-#endif
-    }
 }

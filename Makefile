@@ -16,8 +16,4 @@ build/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-ifeq ($(OS),Windows_NT)
 	-del /Q build\*.o build\*.exe
-else
-	rm -f build/*.o $(EXEC)
-endif

@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "input.h"
-
-#ifdef _WIN32
 #include <conio.h>
+
+#include "input.h"
 
 int getChar(_Bool showCharacter)
 {
@@ -12,15 +11,3 @@ int getChar(_Bool showCharacter)
     else
         return getch();
 }
-
-#else
-
-int getChar(_Bool showCharacter)
-{
-    if (showCharacter)
-        return getchar();
-    else
-    {
-    }
-}
-#endif
