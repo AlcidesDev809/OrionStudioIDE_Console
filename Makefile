@@ -18,3 +18,6 @@ build/%.o: src/%.c
 
 clean:
 	del /Q build\*
+
+run: $(EXEC)
+	cmd /c start "" "$(EXEC)"

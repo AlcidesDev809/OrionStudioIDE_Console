@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #include "screen.h"
+#include "cursor.h"
 #include "output.h"
 #include "input.h"
 #include "wait.h"
@@ -55,5 +56,6 @@ int main()
         openEditorScreen();
     }
 
+    setCursor(true, 0, 0);
     return 0;
 }
