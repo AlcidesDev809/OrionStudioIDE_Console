@@ -70,9 +70,3 @@ cleanup:
     va_end(args);
     return ret;
 }
-
-void setEncoding(EncodingCode encodingCode)
-{
-    if (encodingCode == UTF8)
-        system("chcp 65001 > nul");
-}

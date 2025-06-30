@@ -4,10 +4,8 @@
 
 #include "input.h"
 
-int getChar(_Bool showCharacter)
+char getChar(_Bool showCharacter)
 {
-    if (showCharacter)
-        return getchar();
-    else
-        return getch();
+    int c = showCharacter ? getchar() : getch();
+    return (char)(c == EOF ? EOF : c);
 }

@@ -1,6 +1,6 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-int getChar(_Bool showCharacter);
+char getChar(_Bool showCharacter);
 
 #endif // INPUT_H

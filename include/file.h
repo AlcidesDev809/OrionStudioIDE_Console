@@ -6,6 +6,7 @@ typedef struct
     FILE *file;
     char nameFile[1024];
     char pathFile[1024];
+    _Bool isOpen;
 } File;
 
 void getFilePath(char *buffer);

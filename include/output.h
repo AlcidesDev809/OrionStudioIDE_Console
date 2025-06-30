@@ -8,6 +8,4 @@ typedef enum
 
 int printc(const char *format, ...);
 
-void setEncoding(EncodingCode encodingCode);
-
 #endif // OUTPUT_H

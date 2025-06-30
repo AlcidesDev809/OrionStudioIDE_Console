@@ -7,18 +7,37 @@
 
 int openFile(File *fileStruct, const char *mode)
 {
-    getFilePath(fileStruct->pathFile);
-    fileStruct->file = NULL;
-    fopen_s(&fileStruct->file, fileStruct->pathFile, mode);
-    if (fileStruct->file == NULL)
+    if (fileStruct == NULL || mode == NULL)
         return 0;
-    return 1;
+
+    if (!fileStruct->isOpen)
+    {
+        getFilePath(fileStruct->pathFile);
+        fileStruct->file = NULL;
+        fopen_s(&fileStruct->file, fileStruct->pathFile, mode);
+        if (fileStruct->file == NULL)
+            return 0;
+
+        char *lastSlash = strrchr(fileStruct->pathFile, '\\');
+        if (lastSlash != NULL)
+            strcpy(fileStruct->nameFile, lastSlash + 1);
+        else
+            strcpy(fileStruct->nameFile, fileStruct->pathFile);
+
+        return 1;
+    }
+    return 0;
 }
+
 
 void closeFile(File *fileStruct)
 {
     if (fileStruct->file != NULL)
         fclose(fileStruct->file);
+    fileStruct->file = NULL;
+    fileStruct->isOpen = 0;
+    memset(fileStruct->nameFile, 0, sizeof(fileStruct->nameFile));
+    memset(fileStruct->pathFile, 0, sizeof(fileStruct->pathFile));
 }
 
 void getFilePath(char *buffer)

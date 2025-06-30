@@ -16,7 +16,8 @@ int main()
     bool initProgram = false;
     int key = 0;
 
-    setEncoding(UTF8);
+    system("chcp 65001 > nul");
+    system("cls");
 
     do
     {
