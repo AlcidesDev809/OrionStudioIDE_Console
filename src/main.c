@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <windows.h>
 
-#include "screen.h"
+#include "func.h"
 #include "cursor.h"
 #include "output.h"
 #include "input.h"
