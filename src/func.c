@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <io.h>
 
 #include "func.h"
 #include "screen.h"
@@ -110,19 +111,21 @@ void openEditorScreen()
 
     bool program = true;
     bool read = true;
-    int key = 0;
     char *generalPointer = NULL;
     char *buffer = NULL;
     char *savedBuffer = NULL;
-    const size_t maxLength = GiB(1);
+    const size_t maxLength = MiB(1);
     const int maxPerLine = 86;
-    int line = 0;
     size_t cursorPosition = 0;
+    const size_t maxChars = 1978;
     int cursorX = 0;
     int cursorY = 0;
     int currentLine = 0;
     const int maxLines = 23;
     int charCount = 0;
+
+    (void)read;
+    read = true;
 
     File *file = malloc(sizeof(File));
     if (!file)
@@ -140,6 +143,7 @@ void openEditorScreen()
         "╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗",
         "║   File name: Unnamed                                                                                                 ║",
         "╠═════════════════════════════════════════════════════════════════════════════════════════╤════════════════════════════╣",
+        "║                                                                                         │                            ║",
         "║                                                                                         │                            ║",
         "║                                                                                         │                            ║",
         "║                                                                                         │                            ║",
@@ -278,6 +282,12 @@ void openEditorScreen()
 
                 if (remove(generalPointer) == 0)
                 {
+                    setCursor(false, 5, 28);
+                    for (int i = 0; i < maxPerLine; i++)
+                    {
+                        printc(";%s", 0xFFFFFF, " ");
+                    }
+                    setCursor(false, 5, 28);
                     printc(";%s", 0xFFFFFF, "File deleted successfully!");
                 }
                 else
@@ -307,6 +317,18 @@ void openEditorScreen()
 
                 loadText(buffer, maxLength, 3, 4, maxPerLine, maxLines);
                 cursorPosition = strlen(buffer);
+
+                setCursor(false, 5, 28);
+                for (int i = 0; i < maxPerLine; i++)
+                {
+                    printc(";%s", 0xFFFFFF, " ");
+                }
+                setCursor(false, 5, 28);
+                printc(";%s", 0xFFFFFF, "File closed successfully!");
+
+                cursorPosition = 0;
+                charCount = 0;
+                currentLine = 0;
             }
             else
             {
@@ -330,7 +352,7 @@ void openEditorScreen()
                     setCursor(false, 16, 2);
                     printc(";%s", 0xFFFFFF, file->nameFile);
 
-                    for (int i = 0; i < maxLength; i++)
+                    for (unsigned int i = 0; i < maxLength; i++)
                     {
                         int c = fgetc(file->file);
                         if (c == EOF)
@@ -346,6 +368,15 @@ void openEditorScreen()
 
                     loadText(buffer, maxLength, 3, 4, maxPerLine, maxLines);
                     cursorPosition = strlen(buffer);
+                    charCount = cursorPosition;
+
+                    setCursor(false, 5, 28);
+                    for (int i = 0; i < maxPerLine; i++)
+                    {
+                        printc(";%s", 0xFFFFFF, " ");
+                    }
+                    setCursor(false, 5, 28);
+                    printc(";%s", 0xFFFFFF, "File open successfully!");
                 }
                 else
                 {
@@ -359,17 +390,47 @@ void openEditorScreen()
         }
         else if (firstByte == 19)
         {
-            if (openFile(file, "w"))
+            buffer[cursorPosition] = '\0';
+
+            if (!file->isOpen)
             {
-                for (int i = 0; i < maxLength; i++)
+                if (openFile(file, "w"))
                 {
-                    if (buffer[i] == '\0')
-                        break;
-                    fputc(buffer[i], file->file);
+                    fwrite(buffer, 1, cursorPosition, file->file);
+                    fflush(file->file);
+                    closeFile(file);
+                    file->isOpen = false;
+
+                    strncpy(savedBuffer, buffer, maxLength - 1);
+                    savedBuffer[maxLength - 1] = '\0';
+
+                    setCursor(false, 5, 28);
+                    for (int i = 0; i < maxPerLine; i++)
+                        printc(";%s", 0xFFFFFF, " ");
+                    setCursor(false, 5, 28);
+                    printc(";%s", 0xFFFFFF, "File saved successfully!");
                 }
+                else
+                {
+                    screenError("Error creating file to save.");
+                }
+            }
+            else
+            {
+                rewind(file->file);
+                fwrite(buffer, 1, cursorPosition, file->file);
+                fflush(file->file);
+
+                _chsize(_fileno(file->file), cursorPosition);
+
+                strncpy(savedBuffer, buffer, maxLength - 1);
+                savedBuffer[maxLength - 1] = '\0';
+
+                setCursor(false, 5, 28);
+                for (int i = 0; i < maxPerLine; i++)
+                    printc(";%s", 0xFFFFFF, " ");
+                setCursor(false, 5, 28);
                 printc(";%s", 0xFFFFFF, "File saved successfully!");
-                strcpy(savedBuffer, buffer);
-                closeFile(file);
             }
         }
         else if (firstByte == '\b' || firstByte == 127)
@@ -384,16 +445,20 @@ void openEditorScreen()
         }
         else if (firstByte >= 32 && firstByte < 255)
         {
-            if (cursorPosition + utf8_len < maxLength)
+            if (cursorPosition + utf8_len <= maxChars)
             {
                 memcpy(&buffer[cursorPosition], utf8_char, utf8_len);
                 cursorPosition += utf8_len;
                 charCount++;
                 printc(";%.*s", 0xFFFFFF, utf8_len, (char *)utf8_char);
             }
+            else
+            {
+                setCursor(false, 5, 28);
+                printc(";%s", 0xFF0000, "Limite máximo de caracteres atingido!");
+            }
         }
     }
-
     free(buffer);
     free(savedBuffer);
     closeFile(file);
